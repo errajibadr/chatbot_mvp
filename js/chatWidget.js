@@ -216,6 +216,44 @@ import { RemoteRunnable } from 'https://esm.sh/@langchain/core@0.3.x/runnables/r
         transform: translateY(0) scale(1);
       }
     }
+    .skeleton-loader {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+    .skeleton-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: #e0e0e0;
+      margin-right: 10px;
+    }
+    .skeleton-text {
+      flex-grow: 1;
+    }
+    .skeleton-line {
+      height: 10px;
+      background-color: #e0e0e0;
+      margin-bottom: 5px;
+      border-radius: 5px;
+    }
+    .skeleton-line:last-child {
+      width: 80%;
+    }
+    @keyframes pulse {
+      0% {
+        opacity: 0.6;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0.6;
+      }
+    }
+    .skeleton-loader * {
+      animation: pulse 1.5s infinite;
+    }
   `;
   document.head.appendChild(style);
 
@@ -315,10 +353,14 @@ import { RemoteRunnable } from 'https://esm.sh/@langchain/core@0.3.x/runnables/r
   function showLoadingIndicator() {
     var loadingIndicator = document.createElement('div');
     loadingIndicator.id = 'loading-indicator';
+    loadingIndicator.className = 'skeleton-loader';
     loadingIndicator.innerHTML = `
-      <div class="chat-bubble"></div>
-      <div class="chat-bubble"></div>
-      <div class="chat-bubble"></div>
+      <div class="skeleton-avatar"></div>
+      <div class="skeleton-text">
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line"></div>
+      </div>
     `;
     chatMessages.appendChild(loadingIndicator);
     chatMessages.scrollTop = chatMessages.scrollHeight;
