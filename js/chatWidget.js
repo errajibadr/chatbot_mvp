@@ -10,18 +10,22 @@ import { RemoteRunnable } from 'https://esm.sh/@langchain/core@0.3.x/runnables/r
         return {
           chatbotId: script.getAttribute('chatbot-id') || 'default',
           chatbotHeight: script.getAttribute('chatbot-height') || '400px',
-          chatbotWidth: script.getAttribute('chatbot-width') || '300px'
+          chatbotWidth: script.getAttribute('chatbot-width') || '300px',
+          backendEndpointUrl: script.getAttribute('backend_endpoint_url') || 'http://localhost:8000/chatbot/',
+          logoUrl: script.getAttribute('logo_url') || 'js/logo.jpeg',
         };
       }
     }
-    return { chatbotId: 'default', chatbotHeight: '400px', chatbotWidth: '300px' };
+    return { chatbotId: 'default', chatbotHeight: '400px', chatbotWidth: '300px', backendEndpointUrl: 'http://localhost:8000/chatbot/', logoUrl: 'js/logo.jpeg' };
   }
 
   // Get parameters
-  const { chatbotId, chatbotHeight, chatbotWidth } = getScriptParams();
+  const { chatbotId, chatbotHeight, chatbotWidth, backendEndpointUrl, logoUrl } = getScriptParams();
+
+  console.log('Script parameters:', { chatbotId, chatbotHeight, chatbotWidth, backendEndpointUrl, logoUrl });
 
   // Use the chatbotId to determine the endpoint URL
-  const agentEndpointUrl = `http://localhost:8000/chatbot/${chatbotId}`;
+  const agentEndpointUrl = `${backendEndpointUrl.replace(/\/+$/, '')}/${chatbotId}`;
 
   const chatbotChain = new RemoteRunnable({
     url: agentEndpointUrl,
@@ -33,9 +37,9 @@ import { RemoteRunnable } from 'https://esm.sh/@langchain/core@0.3.x/runnables/r
 
   // Create the chatbot HTML structure
   var chatbotHTML = `
-    <div id="chatbot-container" style="width: ${chatbotWidth}; height: ${chatbotHeight};">
-      <div id="chat-button">
-        <img src="js/logo.jpeg" alt="Chat" id="chat-logo">
+    <div id="chatbot-container" style="width: auto; height: auto;">
+      <div id="chat-button" style="display: block;">
+        <img src="${logoUrl}" alt="Chat" id="chat-logo">
       </div>
       <div id="cta-bubble">
         <div class="message-bubble">Avez vous besoin d'aide ?</div>
@@ -68,11 +72,11 @@ import { RemoteRunnable } from 'https://esm.sh/@langchain/core@0.3.x/runnables/r
       right: 20px;
       z-index: 1000;
       font-family: Arial, sans-serif;
+      width: auto;
+      height: auto;
     }
     #chat-button {
-      position: absolute;
-      bottom: 0;
-      right: 0;
+      position: relative;
       background-color: white;
       border-radius: 50%;
       width: 60px;
@@ -95,8 +99,8 @@ import { RemoteRunnable } from 'https://esm.sh/@langchain/core@0.3.x/runnables/r
       position: absolute;
       bottom: 70px;
       right: 0;
-      width: ${chatbotWidth};
-      height: ${chatbotHeight};
+      width: 300px;
+      height: 400px;
       background-color: #f0f0f0;
       border: 1px solid #ccc;
       border-radius: 10px;
@@ -221,24 +225,42 @@ import { RemoteRunnable } from 'https://esm.sh/@langchain/core@0.3.x/runnables/r
   var closeChat = document.getElementById('close-chat');
   var chatMessages = document.getElementById('chat-messages');
   
+  console.log('Elements found:', { 
+    chatButton: !!chatButton, 
+    chatOverlay: !!chatOverlay, 
+    closeChat: !!closeChat, 
+    chatMessages: !!chatMessages 
+  });
+
+  // Fallback method to create chat button if not found
+  if (!chatButton) {
+    console.log('Chat button not found, creating fallback');
+    chatButton = document.createElement('div');
+    chatButton.id = 'chat-button';
+    chatButton.style.display = 'block';
+    chatButton.innerHTML = `<img src="${logoUrl}" alt="Chat" id="chat-logo">`;
+    document.body.appendChild(chatButton);
+  }
+
   // Modify the click event for the chat button
   if (chatButton && chatOverlay) {
-    console.log('Chat button and overlay found');
+    console.log('Adding click event to chat button');
     chatButton.addEventListener('click', function() {
       console.log('Chat button clicked');
       chatOverlay.style.display = 'block';
-      chatButton.style.display = 'none';
       document.getElementById('cta-bubble').style.display = 'none';
-      if (chatMessages.children.length === 0) {
+      document.getElementById('chatbot-container').style.width = '300px';
+      document.getElementById('chatbot-container').style.height = '470px'; // Adjust this value to fit your needs
+      if (chatMessages && chatMessages.children.length === 0) {
         appendMessage('bot', "Bonjour! Comment puis-je vous aider Aujourd'hui?");
       }
-      // Remove the setTimeout for toggleCtaBubble here
     });
 
     closeChat.addEventListener('click', function() {
       console.log('Close button clicked');
       chatOverlay.style.display = 'none';
-      chatButton.style.display = 'flex';
+      document.getElementById('chatbot-container').style.width = 'auto';
+      document.getElementById('chatbot-container').style.height = 'auto';
       // Show CTA bubble when closing chat
       setTimeout(() => {
         toggleCtaBubble();
@@ -350,7 +372,7 @@ import { RemoteRunnable } from 'https://esm.sh/@langchain/core@0.3.x/runnables/r
     if (chatOverlay.style.display === 'none' || chatOverlay.style.display === '') {
       toggleCtaBubble();
     }
-  }, 3000); // Show every 60 seconds if chat is closed
+  }, 5000); // Show every 60 seconds if chat is closed
 
   console.log('Script execution completed');
 })();
