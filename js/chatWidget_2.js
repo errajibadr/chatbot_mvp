@@ -1,4 +1,3 @@
-
-(function() {
-  console.log('chatWidget_2.js');
+(() => {
+  console.log('calendly Like.js');
 })();
