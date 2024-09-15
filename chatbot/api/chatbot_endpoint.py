@@ -73,7 +73,7 @@ def main():
     runnable = ChatbotGraph.build(assistant, tools)
 
     # Create the Fast API route to invoke the runnable
-    add_routes(app, runnable)
+    add_routes(app, runnable, path="/chatbot/default")
 
     # Start the API
     uvicorn.run(app, host="0.0.0.0", port=8000)

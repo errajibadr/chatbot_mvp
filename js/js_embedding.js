@@ -1,17 +1,25 @@
 // js_embedding.js
 import { RemoteRunnable } from 'https://esm.sh/@langchain/core@0.3.x/runnables/remote';
 
+let chatbot;
 
+function initializeChatbot(agentEndpointUrl) {
+  chatbot = new RemoteRunnable({url: agentEndpointUrl});
+}
 
 // Initialize the RemoteRunnable with your agent endpoint URL// Replace with your actual URL
 const agentEndpointUrl = "http://localhost:8000/";
-const chatbot = new RemoteRunnable({url:agentEndpointUrl});
+
 
 // Generate a unique thread ID (you might want to use a proper UUID library)
 const threadId = Date.now().toString();
 
 
 async function* promptAi(messages) {
+  if (!chatbot) {
+    throw new Error("Chatbot not initialized. Call initializeChatbot first.");
+  }
+  
   const config = { configurable: { thread_id: threadId } };
 
 const formattedMessages = Array.isArray(messages) 
@@ -42,6 +50,10 @@ const formattedMessages = Array.isArray(messages)
 
 // Function to use the chatbot
 async function chatWithBot(userInput) {
+  if (!chatbot) {
+    throw new Error("Chatbot not initialized. Call initializeChatbot first.");
+  }
+
   const messages = [
     { type: "human", content: userInput }
   ];
@@ -61,3 +73,6 @@ async function chatWithBot(userInput) {
 chatWithBot("Livrez vous à Paris?").then(response => {
   console.log("Final response:", response);
 });
+
+// Export the functions that need to be accessible
+export { initializeChatbot, chatWithBot };
