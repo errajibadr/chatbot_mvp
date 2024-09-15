@@ -1,0 +1,13 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "terminal.integrated.env.osx": {
+      "PYTHONPATH": "${workspaceFolder}/agent:${env:PYTHONPATH}"
+    },
+    "jupyter.notebookFileRoot": "${workspaceFolder}"
+  }
+}
