@@ -1,0 +1,20 @@
+FROM python:3.9-slim as chatbot_env
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+RUN useradd -m appuser
+
+WORKDIR /app
+
+COPY ./chatbot/chatbot_requirements.txt /app/chatbot_requirements.txt
+
+RUN python -m venv /app/venv && \
+    /app/venv/bin/pip install --no-cache-dir -r chatbot_requirements.txt && \
+    rm -rf /root/.cache/pip
+
+RUN /app/venv/bin/pip install --upgrade pip
+
+ENV PATH="/app/venv/bin:$PATH"
+
+USER appuser

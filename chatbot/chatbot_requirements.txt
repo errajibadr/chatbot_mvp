@@ -13,12 +13,7 @@ langchain-huggingface
 langserve
 langgraph
 
-sse_starlette
-
 fastapi
 uvicorn
 
-streamlit
-
-langchain-community
-pypdf
+sse_starlette

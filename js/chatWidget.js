@@ -8,7 +8,7 @@ import { RemoteRunnable } from 'https://esm.sh/@langchain/core@0.3.x/runnables/r
     for (let script of scripts) {
       if (script.src.includes('chatWidget.js')) {
         return {
-          chatbotId: script.getAttribute('chatbot-id') || 'default',
+          chatbotId: script.getAttribute('chatbot-id') || 'prestige-webb',
           chatbotHeight: script.getAttribute('chatbot-height') || '400px',
           chatbotWidth: script.getAttribute('chatbot-width') || '300px',
           backendEndpointUrl: script.getAttribute('backend_endpoint_url') || 'http://localhost:8000/chatbot/',
@@ -31,7 +31,7 @@ import { RemoteRunnable } from 'https://esm.sh/@langchain/core@0.3.x/runnables/r
     url: agentEndpointUrl,
   });
 
-  const threadId = Date.now().toString();
+  const threadId = `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
 
   console.log('Chatbot script started');
 

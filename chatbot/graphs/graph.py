@@ -19,10 +19,14 @@ from chatbot.utils.utils import State, _print_event
 
 class ChatbotGraph:
     @staticmethod
-    def build(assistant: Runnable, tools: list[BaseTool]):
+    def build(
+        prompt: ChatPromptTemplate, llm_with_tools: Runnable, tools: list[BaseTool]
+    ):
         builder = StateGraph(State)
 
+        assistant = prompt | llm_with_tools
         # Define nodes: these do the work
+        builder.add_node("prompt", prompt)
         builder.add_node("assistant", Assistant(assistant))
         builder.add_node("tools", create_tool_node_with_fallback(tools))
         # Define edges: these determine how the control flow moves

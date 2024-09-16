@@ -1,11 +1,15 @@
 import os
 
+from dotenv import load_dotenv
+
 from pinecone import Pinecone, ServerlessSpec
 from langchain_pinecone import PineconeEmbeddings, PineconeVectorStore
 from langchain_openai import OpenAIEmbeddings
 from langchain_huggingface import HuggingFaceEmbeddings
 
 from pydantic_settings import BaseSettings
+
+load_dotenv()
 
 
 class PineconeSettings(BaseSettings):

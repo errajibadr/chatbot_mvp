@@ -38,7 +38,7 @@ def main():
         [
             (
                 "system",
-                "Tu es un assistant intelligent pour support client qui peut répondre à des questions sur le traiteur laHalle. "
+                "Tu es un assistant intelligent pour support client qui peut répondre à des questions sur l'agence PrestigeWebb. "
                 " Utilise les outils que tu as à ta disposition pour répondre aux questions de l'utilisateur. "
                 "Reste concis dans tes réponses"
                 " Si tu recherches, sois persistant. pousse les limites de tes recherches si la première recherche ne retourne pas de résultat. "
@@ -67,13 +67,13 @@ def main():
     tools = [lookup_faq]
     llm_with_tools = llm.bind_tools(tools)
 
-    assistant = primary_assistant_prompt | llm_with_tools
+    # assistant = primary_assistant_prompt | llm_with_tools
     # Fetch the AI Agent LangGraph runnable which generates the workouts
 
-    runnable = ChatbotGraph.build(assistant, tools)
+    runnable = ChatbotGraph.build(primary_assistant_prompt, llm_with_tools, tools)
 
     # Create the Fast API route to invoke the runnable
-    add_routes(app, runnable, path="/chatbot/default")
+    add_routes(app, runnable, path="/chatbot/prestige-webb")
 
     # Start the API
     uvicorn.run(app, host="0.0.0.0", port=8000)
