@@ -39,7 +39,7 @@ import { RemoteRunnable } from 'https://esm.sh/@langchain/core@0.3.x/runnables/r
   var chatbotHTML = `
     <div id="chatbot-container" style="width: auto; height: auto;">
       <div id="chat-button" style="display: block;">
-        <img src="${logoUrl}" alt="Chat" id="chat-logo">
+        <img src="${logoUrl}" alt="${chatbotId}" id="chat-logo">
       </div>
       <div id="cta-bubble">
         <div class="message-bubble">Avez vous besoin d'aide ?</div>
@@ -345,7 +345,7 @@ import { RemoteRunnable } from 'https://esm.sh/@langchain/core@0.3.x/runnables/r
       } catch (error) {
         console.error('Error:', error);
         hideLoadingIndicator();
-        appendMessage('bot', 'I apologize, but I encountered an error while processing your request. Please try again or contact support if the issue persists.');
+        appendMessage('bot', 'Je m\'excuse, mais j\'ai rencontré une erreur lors du traitement de votre demande. Veuillez réessayer ou nous contacter directement si le problème persiste.');
       }
     }
   }
