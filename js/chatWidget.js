@@ -22,7 +22,7 @@ import { RemoteRunnable } from 'https://esm.sh/@langchain/core@0.3.x/runnables/r
   // Get parameters
   const { chatbotId, chatbotHeight, chatbotWidth, backendEndpointUrl, logoUrl } = getScriptParams();
 
-  console.log('Script parameters:', { chatbotId, chatbotHeight, chatbotWidth, backendEndpointUrl, logoUrl });
+//   console.log('Script parameters:', { chatbotId, chatbotHeight, chatbotWidth, backendEndpointUrl, logoUrl });
 
   // Use the chatbotId to determine the endpoint URL
   const agentEndpointUrl = `${backendEndpointUrl.replace(/\/+$/, '')}/${chatbotId}`;
@@ -414,7 +414,7 @@ import { RemoteRunnable } from 'https://esm.sh/@langchain/core@0.3.x/runnables/r
     if (chatOverlay.style.display === 'none' || chatOverlay.style.display === '') {
       toggleCtaBubble();
     }
-  }, 5000); // Show every 60 seconds if chat is closed
+  }, 60000); // Show every 60 seconds if chat is closed
 
   console.log('Script execution completed');
 })();
