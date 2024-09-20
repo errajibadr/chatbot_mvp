@@ -46,12 +46,12 @@ import { RemoteRunnable } from 'https://esm.sh/@langchain/core@0.3.x/runnables/r
       </div>
       <div id="chat-overlay">
         <div id="chat-header">
-          Chat Support <span id="close-chat">×</span>
+          Assistant <span id="close-chat">×</span>
         </div>
         <div id="chat-messages"></div>
         <div id="chat-input">
-          <input type="text" id="user-input" placeholder="Type your message...">
-          <button id="send-button">Send</button>
+          <input type="text" id="user-input" placeholder="Tapez votre message ici...">
+          <button id="send-button">Envoyer</button>
         </div>
       </div>
     </div>
