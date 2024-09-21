@@ -34,7 +34,7 @@ COPY --from=builder /opt/venv /opt/venv
 
 # Copy application files
 COPY --chown=appuser:appuser ./chatbot/ /app/chatbot/
-COPY --chown=appuser:appuser .env .
+# COPY --chown=appuser:appuser .env .
 
 # Switch to non-root user
 USER appuser
