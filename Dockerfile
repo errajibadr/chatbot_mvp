@@ -1,5 +1,5 @@
 # Stage 1: Builder
-FROM python:3.11-slim AS builder
+FROM python:3.11-slim AS compile-image
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
@@ -17,7 +17,7 @@ RUN pip install --upgrade pip && \
     rm -rf /root/.cache/pip chatbot_requirements.txt
 
 # Stage 2: Final
-FROM python:3.11-slim AS final
+FROM python:3.11-slim AS runtime-image
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
@@ -30,11 +30,11 @@ RUN useradd -m appuser
 WORKDIR /app
 
 # Copy the virtual environment from the builder stage
-COPY --from=builder /opt/venv /opt/venv
+COPY --from=compile-image /opt/venv /opt/venv
 
 # Copy application files
 COPY --chown=appuser:appuser ./chatbot/ /app/chatbot/
-# COPY --chown=appuser:appuser .env .
+COPY --chown=appuser:appuser .env .
 
 # Switch to non-root user
 USER appuser

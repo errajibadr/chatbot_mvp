@@ -1,19 +1,12 @@
-version: '3'
 services:
-  chatbot_env:
-    build:
-      context: .
-      dockerfile: Dockerfile.base
-    image: chatbot_env:latest
-
   chatbot:
-    build:
-      context: .
-      dockerfile: Dockerfile
     ports:
       - "8000:8000"
     env_file:
       - .env
     environment:
-      - PYTHONPATH="/app/chatbot"
-    image: chatbot_mvp:latest
+      - PYTHONPATH=/app/
+    image: errajibadr/chatbot_mvp:latest
+    restart: no  # Add this line to ensure the container is not restarted after it stops
+
+
