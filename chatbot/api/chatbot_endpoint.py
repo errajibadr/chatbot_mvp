@@ -17,14 +17,13 @@ app = FastAPI(
     description="LangGraph backend for the AI Agents Masterclass series agent.",
 )
 
-# Update CORS middleware to allow both root domain and www subdomain
+# Update CORS middleware to allow all subdomains of prestige-webb.fr
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://prestige-webb.fr",
-        "https://www.prestige-webb.fr",
-        "http://prestige-webb.fr",
-        "http://www.prestige-webb.fr",
+        "https://*.prestige-webb.fr",
+        "https://prestige-webb.webflow.io/",
+        "http://*.prestige-webb.fr",
     ],
     allow_credentials=True,
     allow_methods=["*"],
