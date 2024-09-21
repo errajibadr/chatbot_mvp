@@ -1,12 +1,13 @@
 services:
   chatbot:
+    platform: linux/arm64
     ports:
       - "8000:8000"
     env_file:
       - .env
     environment:
       - PYTHONPATH=/app/
-    image: errajibadr/chatbot_mvp:latest
+    image: errajibadr/chatbot_mvp-arm64:latest
     restart: no  # Add this line to ensure the container is not restarted after it stops
 
 

@@ -41,9 +41,17 @@ runtime:
 		--cache-from=${REPO}/${IMAGE}-${PLATFORM}:latest \
 		--tag ${REPO}/${IMAGE}-${PLATFORM}:latest .
 
+create_manifest:
+	docker manifest create ${REPO}/${IMAGE}:${TAG} \
+		--amend ${REPO}/${IMAGE}-amd64:latest \
+		--amend ${REPO}/${IMAGE}-arm64:latest
+	docker manifest push ${REPO}/${IMAGE}:${TAG}
+
 push:
 	docker push ${REPO}/${IMAGE}-${PLATFORM}:compile-stage
 	docker push ${REPO}/${IMAGE}-${PLATFORM}:latest
+
+push_and_manifest: push create_manifest
 
 build_and_push: build push
 

@@ -2,18 +2,16 @@ python-dotenv
 
 pydantic
 pydantic-settings
-
 pinecone
 
-langchain
+langchain-core
 langchain-pinecone
 langchain-openai
-langchain-huggingface
 
-langserve
+langserve[server]
 langgraph
 
 fastapi
-uvicorn
+uvicorn[standard]
 
 sse_starlette

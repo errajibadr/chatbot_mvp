@@ -5,7 +5,8 @@ from dotenv import load_dotenv
 from pinecone import Pinecone, ServerlessSpec
 from langchain_pinecone import PineconeEmbeddings, PineconeVectorStore
 from langchain_openai import OpenAIEmbeddings
-from langchain_huggingface import HuggingFaceEmbeddings
+# from langchain_huggingface import HuggingFaceEmbeddings
+
 
 from pydantic_settings import BaseSettings
 
@@ -71,10 +72,10 @@ class PineconeIndexFactory:
             return OpenAIEmbeddings(
                 model=self.settings.openai_embedding_settings.model_name
             )
-        elif self.embedding_provider == "huggingface":
-            return HuggingFaceEmbeddings(
-                model_name=self.settings.huggingface_embedding_settings.model_name
-            )
+        # elif self.embedding_provider == "huggingface":
+        #     return HuggingFaceEmbeddings(
+        #         model_name=self.settings.huggingface_embedding_settings.model_name
+        #     )
         elif self.embedding_provider == "pinecone":
             return PineconeEmbeddings(
                 model=self.settings.pinecone_embedding_settings.model_name
