@@ -1,38 +1,44 @@
-# Stage 1: Use the chatbot_env as a builder
-FROM chatbot_env:latest AS builder
+# Stage 1: Builder
+FROM python:3.11-slim AS builder
 
-# Stage 2: Create the final image
-FROM python:3.9-slim
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+WORKDIR /app
 
+# Copy requirements first for better cache utilization
+COPY ./chatbot/chatbot_requirements.txt .
+
+# Create virtual environment and install dependencies
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r chatbot_requirements.txt && \
+    rm -rf /root/.cache/pip chatbot_requirements.txt
+
+# Stage 2: Final
+FROM python:3.11-slim AS final
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH="/app/:/app/chatbot/"
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Create a non-root user
 RUN useradd -m appuser
 
 WORKDIR /app
 
 # Copy the virtual environment from the builder stage
-COPY --from=builder /app/venv /app/venv
+COPY --from=builder /opt/venv /opt/venv
 
-# Set the correct PATH
-ENV PATH="/app/chatbot:/app/venv/bin:$PATH"
+# Copy application files
+COPY --chown=appuser:appuser ./chatbot/ /app/chatbot/
+COPY --chown=appuser:appuser .env .
 
-# Now we can use pip to upgrade sse_starlette
-RUN pip install --upgrade sse_starlette
-
-# Copy the chatbot directory to /app/chatbot/
-COPY ./chatbot/ /app/chatbot/
-
-# Copy the .env file
-COPY .env .
-
-# Change ownership of the app directory to appuser
-USER root
-RUN chown -R appuser:appuser /app
+# Switch to non-root user
 USER appuser
 
-# Make port 8000 available to the world outside this container
 EXPOSE 8000
 
-# Run the application when the container launches
 CMD ["python", "chatbot/api/chatbot_endpoint.py"]
