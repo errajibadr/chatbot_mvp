@@ -30,4 +30,4 @@ jobs:
         context: .
         platforms: linux/amd64,linux/arm64
         push: true
-        tags: dataunboxed/chatbot_mvp:latest
+        tags: errajibadr/chatbot_mvp:latest
