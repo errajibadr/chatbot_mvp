@@ -5,24 +5,28 @@ import './styles/globals.css';  // Import the CSS here
 
 console.log('webflow-bundle.js loaded');
 
+// Expose React and ReactDOM globally
+window.React = React;
+window.ReactDOM = ReactDOM;
+
 // This function will be called to render the chat button
 window.initChatbot = (params) => {
-  console.log('initChatbot called with params:', params);
+//   console.log('initChatbot called with params:', params);
   const script = document.currentScript || document.querySelector('script[data-auto-init]');
-  console.log('Current script:', script);
+//   console.log('Current script:', script);
   const containerId = 'chatbot-container-' + Math.random().toString(36).substring(7);
   
   // Create a container for the chatbot
   const container = document.createElement('div');
   container.id = containerId;
   document.body.appendChild(container);
-  console.log('Container created:', container);
+    //   console.log('Container created:', container);
 
   // Extract parameters
   const logoSrc = script.getAttribute('data-logo-src') || params.logoSrc;
   const chatInterfaceColor = script.getAttribute('data-chat-interface-color') || params.chatInterfaceColor || '#FFFFFF';
   const chatbotId = script.getAttribute('data-chatbot-id') || params.chatbotId;
-  console.log('Extracted params:', { logoSrc, chatInterfaceColor, chatbotId });
+    //   console.log('Extracted params:', { logoSrc, chatInterfaceColor, chatbotId });
 
   // Render the ChatButton component
   ReactDOM.render(

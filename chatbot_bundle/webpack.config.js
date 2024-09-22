@@ -33,4 +33,5 @@ module.exports = {
       'process.env.NEXT_PUBLIC_CHATBOT_API_URL': JSON.stringify('http://localhost:8000/chatbot/'),
     }),
   ],
+  externals: {}, // Remove this line or set it to an empty object
 };

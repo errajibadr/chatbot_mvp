@@ -21,7 +21,6 @@ const CHATBOT_API_URL = typeof process !== 'undefined' && process.env.NEXT_PUBLI
   : 'http://localhost:8000/chatbot/';
 
 export function ChatButton({ logoSrc, chatInterfaceColor = '#FFFFFF', chatbotId }: ChatButtonProps) {
-  console.log('ChatButton component rendered with props:', { logoSrc, chatInterfaceColor, chatbotId });
   const [isOpen, setIsOpen] = useState(false)
   const [showPopup, setShowPopup] = useState(false)
   const [messages, setMessages] = useState([
@@ -65,7 +64,7 @@ export function ChatButton({ logoSrc, chatInterfaceColor = '#FFFFFF', chatbotId 
         const botMessage = typedResponse.messages[typedResponse.messages.length - 1].content
         setMessages(prev => [...prev, { role: 'bot', content: botMessage, timestamp: new Date() }])
       } catch (error) {
-        console.error('Error:', error)
+        // console.error('Error:', error)
         setMessages(prev => [...prev, { role: 'bot', content: "Je suis désolé, une erreur s'est produite. Veuillez réessayer.", timestamp: new Date() }])
       } finally {
         setIsTyping(false)
