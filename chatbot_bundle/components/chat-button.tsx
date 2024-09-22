@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react';
 import { useState, useEffect, KeyboardEvent, useMemo } from 'react'
 import { X, ThumbsUp, ThumbsDown } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -10,7 +11,6 @@ interface ChatButtonProps {
   chatInterfaceColor?: string
   chatbotId: string
 }
-
 
 interface ChatbotResponse {
   messages: { content: string }[];
@@ -74,6 +74,30 @@ export function ChatButton({ logoSrc, chatInterfaceColor = '#FFFFFF', chatbotId 
       handleSend()
     }
   }
+
+  const formatMessage = (content: string) => {
+    const boldRegex = /\*\*(.*?)\*\*/g;
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+
+    return content.split('\n').map((line, index) => (
+      <React.Fragment key={index}>
+        {line.split(boldRegex).map((part, i) => 
+          i % 2 === 1 ? (
+            <strong key={i}>{part}</strong>
+          ) : (
+            part.split(urlRegex).map((subPart, j) => 
+              urlRegex.test(subPart) ? (
+                <a key={j} href={subPart} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                  {subPart}
+                </a>
+              ) : subPart
+            )
+          )
+        )}
+        {index < content.split('\n').length - 1 && <br />}
+      </React.Fragment>
+    ));
+  };
 
   return (
     <>
@@ -155,7 +179,9 @@ export function ChatButton({ logoSrc, chatInterfaceColor = '#FFFFFF', chatbotId 
                       className="absolute -top-2 -left-2 w-6 h-6 rounded-full border-2 border-white"
                     />
                   )}
-                  <p className={message.role === 'bot' ? 'ml-4' : ''}>{message.content}</p>
+                  <p className={message.role === 'bot' ? 'ml-4' : ''}>
+                    {formatMessage(message.content)}
+                  </p>
                   {hoveredMessage === index && (
                     <div className="absolute bottom-full left-0 mb-1 px-2 py-1 bg-gray-700 text-white text-xs rounded">
                       {message.timestamp.toLocaleTimeString()}
