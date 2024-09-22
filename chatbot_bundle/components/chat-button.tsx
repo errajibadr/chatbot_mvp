@@ -21,6 +21,7 @@ const CHATBOT_API_URL = typeof process !== 'undefined' && process.env.NEXT_PUBLI
   : 'http://localhost:8000/chatbot/';
 
 export function ChatButton({ logoSrc, chatInterfaceColor = '#FFFFFF', chatbotId }: ChatButtonProps) {
+  console.log('ChatButton component rendered with props:', { logoSrc, chatInterfaceColor, chatbotId });
   const [isOpen, setIsOpen] = useState(false)
   const [showPopup, setShowPopup] = useState(false)
   const [messages, setMessages] = useState([

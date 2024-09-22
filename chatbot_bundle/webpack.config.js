@@ -1,11 +1,10 @@
 const path = require('path');
 const webpack = require('webpack');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
-  entry: ['./webflow-bundle.js', './styles/globals.css'],
+  entry: './webflow-bundle.js',
   output: {
-    filename: 'bundle.js',
+    filename: 'chatbot-widget.js',
     path: path.resolve(__dirname, 'dist'),
   },
   module: {
@@ -22,27 +21,16 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'postcss-loader',
-        ],
+        use: ['style-loader', 'css-loader', 'postcss-loader'],
       },
     ],
   },
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
-  externals: {
-    react: 'React',
-    'react-dom': 'ReactDOM',
-  },
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NEXT_PUBLIC_CHATBOT_API_URL': JSON.stringify('http://localhost:8000/chatbot/'),
-    }),
-    new MiniCssExtractPlugin({
-      filename: 'styles.css',
     }),
   ],
 };
