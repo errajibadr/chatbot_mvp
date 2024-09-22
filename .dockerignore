@@ -20,3 +20,5 @@ coverage.xml
 .hypothesis
 push_to_aws.md
 .venv
+npm
+node_modules
