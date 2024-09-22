@@ -4,9 +4,10 @@ pydantic
 pydantic-settings
 pinecone
 
-langchain-core
+langchain
 langchain-pinecone
 langchain-openai
+# langchain-huggingface
 
 langserve[server]
 langgraph
