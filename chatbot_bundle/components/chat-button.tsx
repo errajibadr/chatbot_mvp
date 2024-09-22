@@ -4,7 +4,12 @@ import { useState, useEffect, KeyboardEvent } from 'react'
 import { X, ThumbsUp, ThumbsDown } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-export function ChatButton() {
+interface ChatButtonProps {
+  logoSrc: string
+  chatInterfaceColor?: string
+}
+
+export function ChatButton({ logoSrc, chatInterfaceColor = '#FFFFFF' }: ChatButtonProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [showPopup, setShowPopup] = useState(false)
   const [messages, setMessages] = useState([
@@ -74,7 +79,7 @@ export function ChatButton() {
           className="w-16 h-16 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-colors overflow-hidden flex-shrink-0"
         >
           <img 
-            src="/img_logo.png" 
+            src={logoSrc} 
             alt="Chat" 
             className="w-full h-full object-cover" 
             onError={(e) => {
@@ -86,12 +91,18 @@ export function ChatButton() {
       </div>
 
       {isOpen && (
-        <div className="fixed bottom-4 right-4 w-full max-w-sm rounded-lg shadow-xl overflow-hidden bg-white">
-          <div className="flex items-center justify-between p-4 border-b">
+        <div 
+          className="fixed bottom-4 right-4 w-full max-w-sm rounded-lg overflow-hidden" 
+          style={{ 
+            backgroundColor: chatInterfaceColor,
+            boxShadow: '0 -10px 40px -15px rgba(0, 0, 0, 0.3), 0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+          }}
+        >
+          <div className="flex items-center justify-between p-4 border-b" style={{ backgroundColor: chatInterfaceColor }}>
             <div className="flex items-center space-x-2">
-              <img src="/img_logo.png" alt="ChatBot" className="w-10 h-10 rounded-full" />
+              <img src={logoSrc} alt="C" className="w-10 h-10 rounded-full" />
               <div>
-                <h2 className="font-bold">ChatBot</h2>
+                <h2 className="font-bold text-lg text-black" style={{ fontFamily: 'Cursive, sans-serif' }}>ChatBot</h2>
                 <p className="text-sm text-gray-500">Online</p>
               </div>
             </div>
@@ -99,7 +110,7 @@ export function ChatButton() {
               <X size={24} />
             </button>
           </div>
-          <div className="h-96 overflow-y-auto p-4 space-y-4">
+          <div className="h-96 overflow-y-auto p-4 space-y-4" style={{ backgroundColor: '#e9edf3' }}>
             {messages.map((message, index) => (
               <div
                 key={index}
@@ -109,13 +120,13 @@ export function ChatButton() {
               >
                 <div
                   className={`relative max-w-xs px-4 py-2 rounded-lg ${
-                    message.role === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'
+                    message.role === 'user' ? 'bg-blue-500 text-white' : 'bg-white text-gray-800'
                   }`}
                 >
                   {message.role === 'bot' && (
                     <img 
-                      src="/img_logo.png" 
-                      alt="ChatBot" 
+                      src={logoSrc} 
+                      alt="C" 
                       className="absolute -top-2 -left-2 w-6 h-6 rounded-full border-2 border-white"
                     />
                   )}
@@ -160,7 +171,7 @@ export function ChatButton() {
               </div>
             )}
           </div>
-          <div className="border-t p-4">
+          <div className="border-t p-4" style={{ backgroundColor: chatInterfaceColor }}>
             <div className="flex items-center bg-gray-100 rounded-full">
               <input
                 type="text"
@@ -168,7 +179,7 @@ export function ChatButton() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Saisissez votre message ici"
-                className="flex-grow px-4 py-2 bg-transparent focus:outline-none"
+                className="flex-grow px-4 py-2 bg-transparent focus:outline-none text-black"
               />
               <button
                 onClick={handleSend}
@@ -180,9 +191,9 @@ export function ChatButton() {
               </button>
             </div>
             <div className="flex justify-between items-center mt-2">
-              <div className="text-xs text-gray-500">
-                Powered by dataunboxed
-              </div>
+              <a href="https://www.dataunboxed.io" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-500 hover:text-blue-500">
+                Powered by DataUnboxed
+              </a>
               <div className="flex space-x-2">
                 <button className="text-gray-500 hover:text-blue-500">
                   <ThumbsUp size={16} />
