@@ -16,6 +16,10 @@ interface ChatbotResponse {
   messages: { content: string }[];
 }
 
+const CHATBOT_API_URL = typeof process !== 'undefined' && process.env.NEXT_PUBLIC_CHATBOT_API_URL 
+  ? process.env.NEXT_PUBLIC_CHATBOT_API_URL 
+  : 'http://localhost:8000/chatbot/';
+
 export function ChatButton({ logoSrc, chatInterfaceColor = '#FFFFFF', chatbotId }: ChatButtonProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [showPopup, setShowPopup] = useState(false)
@@ -28,12 +32,12 @@ export function ChatButton({ logoSrc, chatInterfaceColor = '#FFFFFF', chatbotId 
   const [threadId] = useState(`${Date.now()}-${Math.random().toString(36).substring(2, 11)}`)
 
   const chatbotChain = useMemo(() => {
-    const baseUrl = process.env.NEXT_PUBLIC_CHATBOT_API_URL || 'http://localhost:8000/chatbot/'
-    const chatbotUrl = `${baseUrl.replace(/\/+$/, '')}/${chatbotId}`
+    const baseUrl = CHATBOT_API_URL;
+    const chatbotUrl = `${baseUrl.replace(/\/+$/, '')}/${chatbotId}`;
     return new RemoteRunnable({
       url: chatbotUrl,
-    })
-  }, [chatbotId])
+    });
+  }, [chatbotId]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -60,7 +64,7 @@ export function ChatButton({ logoSrc, chatInterfaceColor = '#FFFFFF', chatbotId 
         const botMessage = typedResponse.messages[typedResponse.messages.length - 1].content
         setMessages(prev => [...prev, { role: 'bot', content: botMessage, timestamp: new Date() }])
       } catch (error) {
-        console.error('Error:', error)
+        // console.error('Error:', error)
         setMessages(prev => [...prev, { role: 'bot', content: "Je suis désolé, une erreur s'est produite. Veuillez réessayer.", timestamp: new Date() }])
       } finally {
         setIsTyping(false)

@@ -21,6 +21,7 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        "http://localhost:8080",
         "http://localhost:3000",
         "https://*.prestige-webb.fr",
         "https://prestige-webb.webflow.io/",
