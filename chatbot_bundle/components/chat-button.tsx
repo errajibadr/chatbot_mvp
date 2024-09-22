@@ -105,7 +105,7 @@ export function ChatButton({ logoSrc, chatInterfaceColor = '#FFFFFF', chatbotId 
 
   return (
     <>
-      <div className="fixed bottom-4 right-4 flex items-end">
+      <div className="fixed bottom-4 right-4 flex items-end z-50">
         <AnimatePresence>
           {showPopup && !isOpen && (
             <motion.div
@@ -129,7 +129,7 @@ export function ChatButton({ logoSrc, chatInterfaceColor = '#FFFFFF', chatbotId 
         
         <button
           onClick={() => setIsOpen(true)}
-          className="w-16 h-16 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-colors overflow-hidden flex-shrink-0"
+          className="w-16 h-16 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-colors overflow-hidden flex-shrink-0 z-50"
         >
           <img 
             src={logoSrc} 
@@ -145,7 +145,7 @@ export function ChatButton({ logoSrc, chatInterfaceColor = '#FFFFFF', chatbotId 
 
       {isOpen && (
         <div 
-          className="fixed bottom-4 right-4 w-full max-w-sm rounded-lg overflow-hidden" 
+          className="fixed bottom-4 right-4 w-full max-w-sm rounded-lg overflow-hidden z-50" 
           style={{ 
             backgroundColor: chatInterfaceColor,
             boxShadow: '0 -10px 40px -15px rgba(0, 0, 0, 0.3), 0 25px 50px -12px rgba(0, 0, 0, 0.25)'
