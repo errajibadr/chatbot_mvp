@@ -16,9 +16,7 @@ interface ChatbotResponse {
   messages: { content: string }[];
 }
 
-const CHATBOT_API_URL = typeof process !== 'undefined' && process.env.NEXT_PUBLIC_CHATBOT_API_URL 
-  ? `${process.env.NEXT_PUBLIC_CHATBOT_API_URL.replace(/\/+$/, '')}/chatbot/`
-  : 'http://localhost:8000/chatbot/';
+const CHATBOT_API_URL = process.env.NEXT_PUBLIC_CHATBOT_API_URL || 'http://localhost:8000/chatbot/';
 
 export function ChatButton({ logoSrc, chatInterfaceColor = '#FFFFFF', chatbotId }: ChatButtonProps) {
   const [isOpen, setIsOpen] = useState(false)
@@ -31,6 +29,7 @@ export function ChatButton({ logoSrc, chatInterfaceColor = '#FFFFFF', chatbotId 
   const [hoveredMessage, setHoveredMessage] = useState<number | null>(null)
   const [isTyping, setIsTyping] = useState(false)
   const [threadId] = useState(`${Date.now()}-${Math.random().toString(36).substring(2, 11)}`)
+  const [feedback, setFeedback] = useState<'up' | 'down' | null>(null);
 
   const chatbotChain = useMemo(() => {
     const baseUrl = CHATBOT_API_URL;
@@ -106,6 +105,10 @@ export function ChatButton({ logoSrc, chatInterfaceColor = '#FFFFFF', chatbotId 
         {index < content.split('\n').length - 1 && <br />}
       </React.Fragment>
     ));
+  };
+
+  const handleFeedback = (type: 'up' | 'down') => {
+    setFeedback(prevFeedback => prevFeedback === type ? null : type);
   };
 
   return (
@@ -261,16 +264,25 @@ export function ChatButton({ logoSrc, chatInterfaceColor = '#FFFFFF', chatbotId 
               </button>
             </div>
             <div className="flex justify-between items-center mt-2">
-              <a href="https://www.dataunboxed.io" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-500 hover:text-blue-500">
-                Powered by DataUnboxed
+              <div className="flex-grow"></div>
+              <a href="https://www.prestige-webb.fr" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-500 hover:text-blue-500">
+                Powered by PrestigeWebb
               </a>
-              <div className="flex space-x-2">
-                <button className="text-gray-500 hover:text-blue-500">
-                  <ThumbsUp size={16} />
-                </button>
-                <button className="text-gray-500 hover:text-red-500">
-                  <ThumbsDown size={16} />
-                </button>
+              <div className="flex-grow flex justify-end">
+                <div className="flex space-x-2">
+                  <button 
+                    className={`p-1 rounded-full transition-colors ${feedback === 'up' ? 'bg-blue-500 text-white' : 'text-gray-500 hover:text-blue-500'}`}
+                    onClick={() => handleFeedback('up')}
+                  >
+                    <ThumbsUp size={16} />
+                  </button>
+                  <button 
+                    className={`p-1 rounded-full transition-colors ${feedback === 'down' ? 'bg-red-500 text-white' : 'text-gray-500 hover:text-red-500'}`}
+                    onClick={() => handleFeedback('down')}
+                  >
+                    <ThumbsDown size={16} />
+                  </button>
+                </div>
               </div>
             </div>
           </div>

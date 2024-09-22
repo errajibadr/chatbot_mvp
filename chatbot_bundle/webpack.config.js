@@ -1,5 +1,9 @@
 const path = require('path');
 const webpack = require('webpack');
+const dotenv = require('dotenv');
+
+// Load environment variables from .env.prod
+const env = dotenv.config({ path: '.env.prod' }).parsed || {};
 
 module.exports = {
   entry: './webflow-bundle.js',
@@ -30,7 +34,7 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env.NEXT_PUBLIC_CHATBOT_API_URL': JSON.stringify('http://localhost:8000/chatbot/'),
+      'process.env.NEXT_PUBLIC_CHATBOT_API_URL': JSON.stringify(env.NEXT_PUBLIC_CHATBOT_API_URL || 'http://localhost:8000/chatbot/')
     }),
   ],
   externals: {}, // Remove this line or set it to an empty object
