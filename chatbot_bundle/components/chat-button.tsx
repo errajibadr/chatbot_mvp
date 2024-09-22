@@ -17,12 +17,13 @@ interface ChatbotResponse {
 }
 
 const CHATBOT_API_URL = typeof process !== 'undefined' && process.env.NEXT_PUBLIC_CHATBOT_API_URL 
-  ? process.env.NEXT_PUBLIC_CHATBOT_API_URL 
+  ? `${process.env.NEXT_PUBLIC_CHATBOT_API_URL.replace(/\/+$/, '')}/chatbot/`
   : 'http://localhost:8000/chatbot/';
 
 export function ChatButton({ logoSrc, chatInterfaceColor = '#FFFFFF', chatbotId }: ChatButtonProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [showPopup, setShowPopup] = useState(false)
+  const [isPopupHovered, setIsPopupHovered] = useState(false)
   const [messages, setMessages] = useState([
     { role: 'bot', content: "Bonjour! Comment puis-je vous aider aujourd'hui?", timestamp: new Date() }
   ])
@@ -43,12 +44,16 @@ export function ChatButton({ logoSrc, chatInterfaceColor = '#FFFFFF', chatbotId 
     const interval = setInterval(() => {
       if (!isOpen) {
         setShowPopup(true)
-        setTimeout(() => setShowPopup(false), 3000)
+        setTimeout(() => {
+          if (!isPopupHovered) {
+            setShowPopup(false)
+          }
+        }, 5000)
       }
-    }, 5000)
+    }, 30000)
 
     return () => clearInterval(interval)
-  }, [isOpen])
+  }, [isOpen, isPopupHovered])
 
   const handleSend = async () => {
     if (input.trim()) {
@@ -105,7 +110,7 @@ export function ChatButton({ logoSrc, chatInterfaceColor = '#FFFFFF', chatbotId 
 
   return (
     <>
-      <div className="fixed bottom-4 right-4 flex items-end z-50">
+      <div className="fixed bottom-4 right-4 flex flex-col items-end z-[999]">
         <AnimatePresence>
           {showPopup && !isOpen && (
             <motion.div
@@ -113,23 +118,33 @@ export function ChatButton({ logoSrc, chatInterfaceColor = '#FFFFFF', chatbotId 
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.5, y: 20 }}
               transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-              className="mb-2 mr-2 bg-blue-500 text-white p-3 rounded-lg shadow-lg"
+              className="mb-2 bg-white bg-opacity-90 text-black p-3 rounded-lg shadow-lg z-[999] relative"
               style={{
-                width: '200px',
+                width: '250px',
                 minHeight: '60px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
+              onMouseEnter={() => setIsPopupHovered(true)}
+              onMouseLeave={() => setIsPopupHovered(false)}
             >
-              <span className="text-center">Avez-vous besoin d'aide?</span>
+              <span className="text-center">👋 Bonjour ! Comment puis-je vous aider aujourd'hui ?! 💪</span>
+              {isPopupHovered && (
+                <button 
+                  onClick={() => setShowPopup(false)}
+                  className="absolute top-1 right-1 text-gray-500 hover:text-gray-700"
+                >
+                  <X size={16} />
+                </button>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
         
         <button
           onClick={() => setIsOpen(true)}
-          className="w-16 h-16 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-colors overflow-hidden flex-shrink-0 z-50"
+          className="w-16 h-16 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-300 transition-colors overflow-hidden flex-shrink-0 z-[999]"
         >
           <img 
             src={logoSrc} 
@@ -145,7 +160,7 @@ export function ChatButton({ logoSrc, chatInterfaceColor = '#FFFFFF', chatbotId 
 
       {isOpen && (
         <div 
-          className="fixed bottom-4 right-4 w-full max-w-sm rounded-lg overflow-hidden z-50" 
+          className="fixed bottom-4 right-4 w-full max-w-sm rounded-2xl overflow-hidden z-[999]" 
           style={{ 
             backgroundColor: chatInterfaceColor,
             boxShadow: '0 -10px 40px -15px rgba(0, 0, 0, 0.3), 0 25px 50px -12px rgba(0, 0, 0, 0.25)'
