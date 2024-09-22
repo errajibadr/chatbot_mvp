@@ -1,15 +1,22 @@
 'use client'
 
-import { useState, useEffect, KeyboardEvent } from 'react'
+import { useState, useEffect, KeyboardEvent, useMemo } from 'react'
 import { X, ThumbsUp, ThumbsDown } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { RemoteRunnable } from '@langchain/core/runnables/remote'
 
 interface ChatButtonProps {
   logoSrc: string
   chatInterfaceColor?: string
+  chatbotId: string
 }
 
-export function ChatButton({ logoSrc, chatInterfaceColor = '#FFFFFF' }: ChatButtonProps) {
+
+interface ChatbotResponse {
+  messages: { content: string }[];
+}
+
+export function ChatButton({ logoSrc, chatInterfaceColor = '#FFFFFF', chatbotId }: ChatButtonProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [showPopup, setShowPopup] = useState(false)
   const [messages, setMessages] = useState([
@@ -18,6 +25,15 @@ export function ChatButton({ logoSrc, chatInterfaceColor = '#FFFFFF' }: ChatButt
   const [input, setInput] = useState('')
   const [hoveredMessage, setHoveredMessage] = useState<number | null>(null)
   const [isTyping, setIsTyping] = useState(false)
+  const [threadId] = useState(`${Date.now()}-${Math.random().toString(36).substring(2, 11)}`)
+
+  const chatbotChain = useMemo(() => {
+    const baseUrl = process.env.NEXT_PUBLIC_CHATBOT_API_URL || 'http://localhost:8000/chatbot/'
+    const chatbotUrl = `${baseUrl.replace(/\/+$/, '')}/${chatbotId}`
+    return new RemoteRunnable({
+      url: chatbotUrl,
+    })
+  }, [chatbotId])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -30,16 +46,25 @@ export function ChatButton({ logoSrc, chatInterfaceColor = '#FFFFFF' }: ChatButt
     return () => clearInterval(interval)
   }, [isOpen])
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (input.trim()) {
-      setMessages([...messages, { role: 'user', content: input, timestamp: new Date() }])
+      setMessages(prev => [...prev, { role: 'user', content: input, timestamp: new Date() }])
       setInput('')
       setIsTyping(true)
-      // Simulate bot response
-      setTimeout(() => {
-        setMessages(prev => [...prev, { role: 'bot', content: "Je suis désolé, je ne peux répondre qu'aux questions concernant le produit ChatBot.", timestamp: new Date() }])
+      try {
+        const response = await chatbotChain.invoke(
+          { messages: [{ type: "human", content: input.trim() }]},
+          { configurable: { thread_id: threadId }, version: "v1" } as any
+        )
+        const typedResponse = response as ChatbotResponse
+        const botMessage = typedResponse.messages[typedResponse.messages.length - 1].content
+        setMessages(prev => [...prev, { role: 'bot', content: botMessage, timestamp: new Date() }])
+      } catch (error) {
+        console.error('Error:', error)
+        setMessages(prev => [...prev, { role: 'bot', content: "Je suis désolé, une erreur s'est produite. Veuillez réessayer.", timestamp: new Date() }])
+      } finally {
         setIsTyping(false)
-      }, 2000)
+      }
     }
   }
 
