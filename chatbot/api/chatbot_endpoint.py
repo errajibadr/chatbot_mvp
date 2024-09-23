@@ -21,12 +21,12 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:8080",
-        "http://localhost:3000",
-        "https://*.prestige-webb.fr",
         "https://www.prestige-webb.fr",
+        "https://*.prestige-webb.fr",
         "https://prestige-webb.webflow.io/",
         "https://www.dataunboxed.io",
+        "http://localhost:8080",
+        "http://localhost:3000",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -38,7 +38,8 @@ app.add_middleware(
 def main():
     from langchain_openai import ChatOpenAI
     from langchain_core.prompts import ChatPromptTemplate
-    import uuid
+
+    # import uuid
     from datetime import datetime
 
     primary_assistant_prompt = ChatPromptTemplate.from_messages(
@@ -57,15 +58,15 @@ def main():
         ]
     ).partial(time=datetime.now())
 
-    thread_id = str(uuid.uuid4())
+    # thread_id = str(uuid.uuid4())
 
-    config = {
-        "configurable": {
-            "user_id": "3442 587242",
-            # Checkpoints are accessed by thread_id
-            "thread_id": thread_id,
-        }
-    }
+    # config = {
+    #     "configurable": {
+    #         "user_id": "3442 587242",
+    #         # Checkpoints are accessed by thread_id
+    #         "thread_id": thread_id,
+    #     }
+    # }
 
     llm = ChatOpenAI(
         model="gpt-4o",

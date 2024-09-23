@@ -3,7 +3,8 @@
 REPO=errajibadr
 IMAGE=chatbot_mvp
 PLATFORM ?= amd64
-AWS_REPO=588738611726.dkr.ecr.eu-west-3.amazonaws.com/chatbot/mvp
+AWS_REPO=588738611726.dkr.ecr.eu-west-3.amazonaws.com
+AWS_IMAGE=chatbot/mvp
 TAG=latest
 
 .PHONY: all build compile runtime push tag push_to_aws create_manifest help
@@ -55,17 +56,11 @@ push_and_manifest: push create_manifest
 
 bp: build push
 
-bpm: build_and_push create_manifest
+bpm: bp create_manifest
 
 push_to_aws: tag
 	aws ecr get-login-password --region eu-west-3 | docker login --username AWS --password-stdin ${AWS_REPO}
-	docker push ${AWS_REPO}:${TAG}
+	docker push ${AWS_REPO}/${AWS_IMAGE}:${TAG}
 
 tag:
-	docker tag ${REPO}/${IMAGE}-${PLATFORM}:latest ${AWS_REPO}:${TAG}
-
-create_manifest:
-	docker manifest create ${REPO}/${IMAGE}:${TAG} \
-		--amend ${REPO}/${IMAGE}-amd64:latest \
-		--amend ${REPO}/${IMAGE}-arm64:latest
-	docker manifest push ${REPO}/${IMAGE}:${TAG}
+	docker tag ${REPO}/${IMAGE}-${PLATFORM}:latest ${AWS_REPO}/${AWS_IMAGE}:${TAG}
