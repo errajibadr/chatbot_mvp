@@ -53,7 +53,9 @@ push:
 
 push_and_manifest: push create_manifest
 
-build_and_push: build push
+bp: build push
+
+bpm: build_and_push create_manifest
 
 push_to_aws: tag
 	aws ecr get-login-password --region eu-west-3 | docker login --username AWS --password-stdin ${AWS_REPO}
