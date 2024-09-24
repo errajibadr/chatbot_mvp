@@ -23,7 +23,7 @@ app.add_middleware(
     allow_origins=[
         "https://www.prestige-webb.fr",
         "https://*.prestige-webb.fr",
-        "https://prestige-webb.webflow.io/",
+        "https://prestige-webb.webflow.io",  # Removed trailing slash
         "https://www.dataunboxed.io",
         "http://localhost:8080",
         "http://localhost:3000",
